@@ -1264,3 +1264,9 @@ def test_host_routing_is_case_insensitive(test_client_factory: TestClientFactory
     response = test_client_factory(router).get("/", headers={"host": "Sub.example.ORG"})
     assert response.status_code == 200
     assert response.text == "sub"
+
+
+def test_mount_url_path_for_leading_slash() -> None:
+    mount = Mount("/static", routes=[Route("/{path:path}", ok, name="file")], name="static")
+    assert mount.url_path_for("static:file", path="/foo/bar") == "/static/foo/bar"
+    assert mount.url_path_for("static:file", path="foo/bar") == "/static/foo/bar"
